@@ -1,0 +1,12 @@
+{
+    "fakeDatabase": [
+        {
+            "id": "a",
+            "name": "alice"
+        },
+        {
+            "id": "b",
+            "name": "alice'"
+        }
+    ]
+}
