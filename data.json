@@ -1,12 +1,40 @@
 {
-    "fakeDatabase": [
+    "eventData": [
         {
-            "id": "a",
-            "name": "alice"
+            "event_index": "1",
+            "event_title": "First Event",
+            "event_des": "This is a description of the first event",
+            "event_complete": false,
+            "event_time": {
+                "day_index": 1,
+                "event_date": "1 Oct 2019",
+                "event_start": "13:00",
+                "event_duration": 2
+            }
         },
         {
-            "id": "b",
-            "name": "alice'"
+            "event_index": "2",
+            "event_title": "Second Event",
+            "event_des": "This is a description of the second event",
+            "event_complete": false,
+            "event_time": {
+                "day_index": 1,
+                "event_date": "1 Oct 2019",
+                "event_start": "17:00",
+                "event_duration": 2
+            }
+        },
+        {
+            "event_index": "3",
+            "event_title": "Last Event",
+            "event_des": "This is a description of the third event",
+            "event_complete": false,
+            "event_time": {
+                "day_index": 7,
+                "event_date": "7 Oct 2019",
+                "event_start": "09:00",
+                "event_duration": 6
+            }
         }
     ]
 }

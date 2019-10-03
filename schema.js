@@ -11,53 +11,68 @@ const {
 } = require('graphql');
 
 
-// Fake Type 
-const FakeType = new GraphQLObjectType({
-    name: 'FakeName',
+// // Fake Type 
+// const FakeType = new GraphQLObjectType({
+//     name: 'FakeName',
+//     fields: () => ({
+//         id: { type: GraphQLString },
+//         name: { type: GraphQLString },
+//     })
+// });
+
+// CALENDAR TYPES
+// Events
+const EventType = new GraphQLObjectType({
+    name: 'DayEvents',
     fields: () => ({
-        id: { type: GraphQLString },
-        name: { type: GraphQLString },
+        event_index: { type: GraphQLString },
+        event_title: { type: GraphQLString },
+        event_des: { type: GraphQLString },
+        event_complete: { type: GraphQLBoolean },
+
+        event_time: { type: TimeType },
     })
-});
+})
+
+const TimeType = new GraphQLObjectType({
+    name: 'Time',
+    fields: () => ({
+        day_index: { type: GraphQLInt },
+
+        event_date: { type: GraphQLString },
+        event_start: { type: GraphQLString },
+        event_duration: { type: GraphQLInt },
+    })
+})
 
 
-
-
-// // Types
-// const DayType = new GraphQLObjectType({
-//     name: 'daysEvents',
-//     fields: () => ({
-//         day: { type: GraphQLString },
-//         events: { type: EventType }
-//     })
-// });
-
-// // Child Type
-// const EventType = new GraphQLObjectType({
-//     name: 'eventList',
-//     fields: () => ({
-//         TITLE: { type: GraphQLString },
-//         TIME: { type: GraphQLString },
-//         DURATION: { type: GraphQLString },
-//         LOCATIONS: { type: GraphQLString }
-//     })
-// });
-
-// Root Query --- YO THIS MUST REFERENCE THE OTHER SHIT
+// Root Query 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        FAKE: {
-            type: new GraphQLList(FakeType),
-            resolve(parent, args) {
-
-
-                return axios.get('http://localhost:3000/fakeDatabase')
+        event_ROOT: {
+            type: new GraphQLList(EventType),
+            resolve(_, args) {
+                return axios.get('http://localhost:3001/eventData')
                     .then(res => res.data)
-            },
+            }
         }
     }
 })
+
+// Root Query --- YO THIS MUST REFERENCE THE OTHER SHIT
+// const RootQuery = new GraphQLObjectType({
+//     name: 'RootQueryType',
+//     fields: {
+//         FAKE: {
+//             type: new GraphQLList(FakeType),
+//             resolve(_, args) {
+//                 return axios.get('http://localhost:3001/fakeDatabase')
+//                     .then(res => res.data)
+//             },
+//         }
+//     }
+// })
 
 module.exports = new GraphQLSchema({
     query: RootQuery
