@@ -7,7 +7,7 @@
             "event_complete": false,
             "event_time": {
                 "day_index": 1,
-                "event_date": "1 Oct 2019",
+                "event_date": "01-10-2019",
                 "event_start": "13:00",
                 "event_duration": 2
             }
@@ -19,7 +19,7 @@
             "event_complete": false,
             "event_time": {
                 "day_index": 1,
-                "event_date": "1 Oct 2019",
+                "event_date": "01-10-2019",
                 "event_start": "17:00",
                 "event_duration": 2
             }
@@ -31,7 +31,7 @@
             "event_complete": false,
             "event_time": {
                 "day_index": 7,
-                "event_date": "7 Oct 2019",
+                "event_date": "07-10-2019",
                 "event_start": "09:00",
                 "event_duration": 6
             }
