@@ -1,4 +1,5 @@
 const axios = require('axios');
+const moment = require('moment');
 
 const {
     GraphQLSchema,
@@ -11,45 +12,85 @@ const {
     GraphQLID,
 } = require('graphql');
 
-// CALENDAR TYPES
+// TYPES
 // Events
+
 const EventType = new GraphQLObjectType({
-    name: 'DayEvents',
+    name: 'EventType',
+    description: 'Individual instances of events',
     fields: () => ({
-        event_index: { type: GraphQLID },
+        id: { type: GraphQLString },
         event_title: { type: GraphQLString },
         event_des: { type: GraphQLString },
         event_complete: { type: GraphQLBoolean },
 
-        event_time: { type: TimeType },
+        event_info: { type: TimeType },
+
+        event_monthIndex: {
+            type: GraphQLString,
+            resolve(obj) {
+                return moment(obj.event_info.eventDate).format('MM-YYYY')
+            }
+        },
+        event_dayIndex: {
+            type: GraphQLInt,
+            resolve(obj) {
+                return parseInt(moment(obj.event_info.eventDate).format('D'))
+            }
+        }
     })
 })
+
+// Time
 
 const TimeType = new GraphQLObjectType({
-    name: 'Time',
+    name: 'TimeType',
+    description: 'Returns the date time and duration of an event',
     fields: () => ({
-        day_index: { type: GraphQLInt },
-
-        event_date: { type: GraphQLString },
-        event_start: { type: GraphQLString },
-        event_duration: { type: GraphQLInt },
+        eventDate: { type: GraphQLString }, // 'MM-DD-YYYY'
+        start_time: { type: GraphQLString }, // 'HH:mm'
+        end_time: { // HH-mm //FOR SOME REASON MOMENT RESETS THE TIME TO MIDNGHT...
+            type: GraphQLString,
+            resolve(obj) {
+                return moment([obj.start_time]).add(obj.duration, 'hours').format('HH:mm')
+            }
+        },
+        duration: { type: GraphQLInt },
     })
 })
 
+// ROOT
 
-// Root Query / Resolver
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
+    description: 'returns an event by its event_id or an array of events by the month',
     fields: {
-        event_ROOT: {
-            type: new GraphQLList(EventType),
+        event: {
+            type: EventType,
+            description: 'returns an event by its id',
+            args: {
+                id: { type: GraphQLString }
+            },
             resolve(_, args) {
-                return axios.get('http://localhost:3001/eventData')
+                return axios.get('http://localhost:3001/eventData/' + args.id)
                     .then(res => res.data)
+            }
+        },
+        events: {
+            type: new GraphQLList(EventType),
+            description: 'returns all events in a given month',
+            args: {
+                event_monthIndex: { type: GraphQLString }
+            },
+            resolve(_, args) {
+                return axios.get('http://localhost:3001/eventData/', { params: args })
+                    .then(res => res.data)
+
             }
         }
     }
 })
+
 
 module.exports = new GraphQLSchema({
     query: RootQuery
