@@ -8,13 +8,11 @@ const {
     GraphQLInt,
     GraphQLString,
     GraphQLBoolean,
-    GraphQLList,
-    GraphQLID,
+    GraphQLList
 } = require('graphql');
 
 // TYPES
 // Events
-
 const EventType = new GraphQLObjectType({
     name: 'EventType',
     description: 'Individual instances of events',
@@ -29,7 +27,6 @@ const EventType = new GraphQLObjectType({
         event_monthIndex: {
             type: GraphQLString,
             resolve(obj) {
-                console.log('hello 2')
                 return moment(obj.event_info.eventDate).format('MM-YYYY')
             }
         },
@@ -43,7 +40,6 @@ const EventType = new GraphQLObjectType({
 })
 
 // Time
-
 const TimeType = new GraphQLObjectType({
     name: 'TimeType',
     description: 'Returns the date time and duration of an event',
@@ -84,15 +80,12 @@ const RootQuery = new GraphQLObjectType({
                 event_monthIndex: { type: GraphQLString }
             },
             resolve(_, args) {
-                console.log('hello')
                 return axios.get('http://localhost:3001/eventData/', { params: args })
                     .then(res => res.data.filter(d => console.log('res', d) || moment(d.event_info.eventDate).format("MM-YYYY") === args.event_monthIndex))
-
             }
         }
     }
 })
-
 
 module.exports = new GraphQLSchema({
     query: RootQuery
